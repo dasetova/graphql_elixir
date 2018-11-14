@@ -98,4 +98,20 @@ defmodule PlateSlateWeb.Schema do
       Date.to_iso8601(date)
     end)
   end
+
+  scalar :email do
+    parse(fn input ->
+      with %Absinthe.Blueprint.Input.String{value: value} <- input,
+           # Parsing logic: Converts value from user into an Elixir term
+           [username, domain] <- value |> String.splitter("@") |> Enum.to_list() do
+        {:ok, {username, domain}}
+      else
+        _ -> :error
+      end
+    end)
+
+    serialize(fn {username, domain} = _email ->
+      username <> "@" <> domain
+    end)
+  end
 end
