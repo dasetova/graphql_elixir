@@ -13,7 +13,13 @@ defmodule PlateSlateWeb.Schema do
   import_types(__MODULE__.MenuTypes)
 
   query do
+    # Imports the object in MenuTypes. There are the queries defined to menu context
     import_fields(:menu_queries)
+
+    field(:search, list_of(:search_result)) do
+      arg(:matching, non_null(:string))
+      resolve(&PlateSlateWeb.Resolvers.Menu.search/3)
+    end
   end
 
   enum :sort_order do
