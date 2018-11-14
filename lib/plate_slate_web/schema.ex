@@ -9,69 +9,11 @@
 defmodule PlateSlateWeb.Schema do
   use Absinthe.Schema
 
-  alias PlateSlateWeb.Resolvers
+  # Import types defined in PlateSlateWeb.Schema.MenuTypes
+  import_types(__MODULE__.MenuTypes)
 
   query do
-    field :menu_items, list_of(:menu_item) do
-      # arg(:matching, :string)
-      # Changing the way filters are pass
-      # Resuming filters in a input_object
-      # non_null makes filter mandatory
-      arg(:filter, :menu_item_filter)
-      # # Defining a type sort_order. Is a enum created by me
-      arg(:order, type: :sort_order, default_value: :asc)
-
-      resolve(&Resolvers.Menu.menu_items/3)
-    end
-
-    field :categories, list_of(:category) do
-      arg(:filter, :categories_filters)
-      arg(:order, type: :sort_order)
-      resolve(&Resolvers.Menu.categories/3)
-    end
-  end
-
-  object :menu_item do
-    field(:id, :id)
-    field(:name, :string)
-    field(:description, :string)
-    field(:added_on, :date)
-  end
-
-  object :category do
-    field(:id, :id)
-    field(:name, :string)
-  end
-
-  @desc "Filtering options for the menu list"
-  input_object(:menu_item_filter) do
-    # This fields also can have the non_null statement
-    @desc "Matching a name"
-    field(:name, :string)
-
-    @desc "Matching a category name"
-    field(:category, :string)
-
-    @desc "Matching a tag"
-    field(:tag, :string)
-
-    @desc "Priced above a value"
-    field(:price_above, :float)
-
-    @desc "Priced below a value"
-    field(:price_below, :float)
-
-    @desc "Added to the menu before this date"
-    field(:added_before, :date)
-
-    @desc "Added to the menu after this date"
-    field(:added_after, :date)
-  end
-
-  @desc "Filtering options for the categories"
-  input_object(:categories_filters) do
-    @desc "Matching a name"
-    field(:name, :string)
+    import_fields(:menu_queries)
   end
 
   enum :sort_order do
