@@ -7,7 +7,7 @@
 # Visit http://www.pragmaticprogrammer.com/titles/wwgraphql for more book information.
 # ---
 defmodule PlateSlateWeb.Resolvers.Menu do
-  alias PlateSlate.Menu
+  alias PlateSlate.{Menu, Utils}
 
   def menu_items(_, args, _) do
     {:ok, Menu.list_items(args)}
@@ -26,14 +26,15 @@ defmodule PlateSlateWeb.Resolvers.Menu do
     {:ok, Menu.search(term)}
   end
 
-  def create_item(_, %{input: params} = args, _) do
-    IO.inspect(args, label: "Args in create_item")
-    IO.inspect(params, label: "Params from args")
-
+  def create_item(_, %{input: params}, _) do
     case Menu.create_item(params) do
-      {:error, _} ->
-        # ToDo -> Improve error message with ecto errors
-        {:error, "Could not create menu item"}
+      {:error, changeset} ->
+        # Adding more information to the errors in the changeset
+        {
+          :error,
+          message: "Could not create menu item",
+          details: Utils.translate_chageset_errors(changeset)
+        }
 
       {:ok, _} = success ->
         success

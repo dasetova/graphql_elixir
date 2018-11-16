@@ -261,6 +261,7 @@ defmodule PlateSlateWeb.Schema.Query.MenuItemsTest do
                %{
                  "locations" => [%{"column" => 0, "line" => 2}],
                  "message" => "Could not create menu item",
+                 "details" => %{"name" => ["has already been taken"]},
                  "path" => ["createMenuItem"]
                }
              ],
