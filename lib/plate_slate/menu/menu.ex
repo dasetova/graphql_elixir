@@ -194,7 +194,7 @@ defmodule PlateSlate.Menu do
       ** (Ecto.NoResultsError)
 
   """
-  def get_item!(id), do: Repo.get!(Item, id)
+  def get_item(id), do: Repo.get(Item, id)
 
   @doc """
   Creates a item.

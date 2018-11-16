@@ -67,6 +67,11 @@ defmodule PlateSlateWeb.Schema.MenuTypes do
       arg(:input, non_null(:menu_item_input))
       resolve(&Resolvers.Menu.create_item/3)
     end
+
+    field(:update_menu_item, :menu_item_result) do
+      arg(:input, non_null(:menu_item_update))
+      resolve(&Resolvers.Menu.update_item/3)
+    end
   end
 
   # ---------------Input Types (Helpers)----------------
@@ -84,10 +89,10 @@ defmodule PlateSlateWeb.Schema.MenuTypes do
     field(:tag, :string)
 
     @desc "Priced above a value"
-    field(:price_above, :float)
+    field(:price_above, :decimal)
 
     @desc "Priced below a value"
-    field(:price_below, :float)
+    field(:price_below, :decimal)
 
     @desc "Added to the menu before this date"
     field(:added_before, :date)
@@ -108,6 +113,17 @@ defmodule PlateSlateWeb.Schema.MenuTypes do
     field(:description, non_null(:string))
     field(:price, non_null(:decimal))
     field(:category_id, non_null(:id))
+    # Optional field to create the category along with the item
+    # field(:category_name, :string)
+  end
+
+  @desc "Required fields to update a menu_item"
+  input_object(:menu_item_update) do
+    field(:id, non_null(:id))
+    field(:name, :string)
+    field(:description, :string)
+    field(:price, :decimal)
+    field(:category_id, :id)
   end
 
   # ---------------Unions and Interfaces----------------
