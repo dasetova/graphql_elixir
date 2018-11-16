@@ -11,50 +11,14 @@ defmodule PlateSlateWeb.Schema do
 
   # Import types defined in PlateSlateWeb.Schema.MenuTypes
   import_types(__MODULE__.MenuTypes)
+  import_types(__MODULE__.UtilsTypes)
 
   query do
     # Imports the object in MenuTypes. There are the queries defined to menu context
     import_fields(:menu_queries)
   end
 
-  enum :sort_order do
-    value(:asc)
-    value(:desc)
-  end
-
-  # Type defined than can be use in fields
-  # This is an example -> Absinthe.Type.Custom has several types
-  scalar :date do
-    parse(fn input ->
-      # Validating the String type to avoid exceptions parsing to date
-      with %Absinthe.Blueprint.Input.String{value: value} <- input,
-           # Parsing logic: Converts value from user into an Elixir term
-           {:ok, date} <- Date.from_iso8601(value) do
-        {:ok, date}
-      else
-        _ -> :error
-      end
-    end)
-
-    serialize(fn date ->
-      # Serialization logic: converts an elixir term back into a value JSON
-      Date.to_iso8601(date)
-    end)
-  end
-
-  scalar :email do
-    parse(fn input ->
-      with %Absinthe.Blueprint.Input.String{value: value} <- input,
-           # Parsing logic: Converts value from user into an Elixir term
-           [username, domain] <- value |> String.splitter("@") |> Enum.to_list() do
-        {:ok, {username, domain}}
-      else
-        _ -> :error
-      end
-    end)
-
-    serialize(fn {username, domain} = _email ->
-      username <> "@" <> domain
-    end)
+  mutation do
+    import_fields(:menu_mutations)
   end
 end

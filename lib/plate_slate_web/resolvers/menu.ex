@@ -25,4 +25,18 @@ defmodule PlateSlateWeb.Resolvers.Menu do
   def search(_, %{matching: term}, _) do
     {:ok, Menu.search(term)}
   end
+
+  def create_item(_, %{input: params} = args, _) do
+    IO.inspect(args, label: "Args in create_item")
+    IO.inspect(params, label: "Params from args")
+
+    case Menu.create_item(params) do
+      {:error, _} ->
+        # ToDo -> Improve error message with ecto errors
+        {:error, "Could not create menu item"}
+
+      {:ok, _} = success ->
+        success
+    end
+  end
 end
