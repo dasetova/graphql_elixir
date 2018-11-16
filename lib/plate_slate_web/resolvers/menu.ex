@@ -30,14 +30,10 @@ defmodule PlateSlateWeb.Resolvers.Menu do
     case Menu.create_item(params) do
       {:error, changeset} ->
         # Adding more information to the errors in the changeset
-        {
-          :error,
-          message: "Could not create menu item",
-          details: Utils.translate_chageset_errors(changeset)
-        }
+        {:ok, %{errors: Utils.translate_chageset_errors(changeset)}}
 
-      {:ok, _} = success ->
-        success
+      {:ok, menu_item} ->
+        {:ok, %{menu_item: menu_item}}
     end
   end
 end
