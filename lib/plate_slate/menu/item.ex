@@ -33,5 +33,6 @@ defmodule PlateSlate.Menu.Item do
     |> cast(attrs, @attrs)
     |> validate_required(@require_attrs)
     |> assoc_constraint(:category)
+    |> unique_constraint(:name)
   end
 end
