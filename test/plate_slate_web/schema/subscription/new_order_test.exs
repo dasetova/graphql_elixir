@@ -29,8 +29,6 @@ defmodule PlateSlateWeb.Schema.Subscription.NewOrderTest do
       ]
     }
 
-    IO.inspect(order_input, label: "BBB")
-
     ref = push_doc(socket, @mutation, variables: %{"input" => order_input})
     assert_reply(ref, :ok, reply)
     assert(%{data: %{"placeOrder" => %{"order" => %{"id" => _}}}} = reply)

@@ -25,11 +25,6 @@ defmodule PlateSlateWeb.Schema do
   end
 
   subscription do
-    field(:new_order, :order) do
-      # The config macro is specific to susbscriptions
-      # Later the topic config will be explained
-      # Topic is used in the publish function
-      config(fn _args, _info -> {:ok, topic: "*"} end)
-    end
+    import_fields(:ordering_subscriptions)
   end
 end

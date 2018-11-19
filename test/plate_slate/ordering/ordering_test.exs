@@ -26,8 +26,6 @@ defmodule PlateSlate.OrderingTest do
 
       assert {:ok, %Order{} = order} = Ordering.create_order(attrs)
 
-      IO.inspect(order, label: "AAA")
-
       assert Enum.map(order.items, &Map.take(&1, [:name, :quantity, :price])) == [
                %{name: "Masala Chai", quantity: 1, price: chai.price},
                %{name: "French Fries", quantity: 2, price: fries.price}

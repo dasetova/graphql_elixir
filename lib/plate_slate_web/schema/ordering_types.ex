@@ -1,11 +1,54 @@
 defmodule PlateSlateWeb.Schema.OrderingTypes do
   use Absinthe.Schema.Notation
-  alias PlateSlateWeb.Resolvers
+  alias PlateSlateWeb.Resolvers.Ordering
 
   object(:ordering_mutations) do
     field(:place_order, :order_result) do
       arg(:input, non_null(:place_order_input))
-      resolve(&Resolvers.Ordering.place_order/3)
+      resolve(&Ordering.place_order/3)
+    end
+
+    field(:ready_order, :order_result) do
+      arg(:id, non_null(:id))
+      resolve(&Ordering.ready_order/3)
+    end
+
+    field(:complete_order, :order_result) do
+      arg(:id, non_null(:id))
+      resolve(&Ordering.complete_order/3)
+    end
+  end
+
+  object(:ordering_subscriptions) do
+    field(:new_order, :order) do
+      # The config macro is specific to susbscriptions
+      # Later the topic config will be explained
+      # Topic is used in the publish function
+      config(fn _args, _info -> {:ok, topic: "*"} end)
+    end
+
+    field(:update_order, :order) do
+      arg(:id, non_null(:id))
+      # In this case, the topic is important to separate the events
+      # For every order
+      config(fn args, _info -> {:ok, topic: args.id} end)
+
+      # In the trigger macro:
+      # 1st arg: List of mutations whose trigger the subscription
+      # 2th arg: fn to resolve the topic
+      trigger(
+        [:ready_order, :complete_order],
+        topic: fn
+          %{order: order} -> [order.id]
+          _ -> []
+        end
+      )
+
+      # This resolve function is used to transform the response from the mutation
+      # Resolve function
+      resolve(fn %{order: order}, _, _ ->
+        {:ok, order}
+      end)
     end
   end
 
