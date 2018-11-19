@@ -11,6 +11,7 @@ defmodule PlateSlateWeb.Schema do
 
   # Import types defined in PlateSlateWeb.Schema.MenuTypes
   import_types(__MODULE__.MenuTypes)
+  import_types(__MODULE__.OrderingTypes)
   import_types(__MODULE__.UtilsTypes)
 
   query do
@@ -20,5 +21,15 @@ defmodule PlateSlateWeb.Schema do
 
   mutation do
     import_fields(:menu_mutations)
+    import_fields(:ordering_mutations)
+  end
+
+  subscription do
+    field(:new_order, :order) do
+      # The config macro is specific to susbscriptions
+      # Later the topic config will be explained
+      # Topic is used in the publish function
+      config(fn _args, _info -> {:ok, topic: "*"} end)
+    end
   end
 end

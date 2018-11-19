@@ -1,5 +1,5 @@
 defmodule PlateSlate.Helpers.Utils do
-  def translate_chageset_errors(changeset) do
+  def translate_changeset_errors(changeset) do
     changeset
     |> Ecto.Changeset.traverse_errors(&format_error/1)
     |> Enum.map(fn

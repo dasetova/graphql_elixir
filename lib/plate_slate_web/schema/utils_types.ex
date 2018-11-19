@@ -1,6 +1,12 @@
 defmodule PlateSlateWeb.Schema.UtilsTypes do
   use Absinthe.Schema.Notation
 
+  # Moved here because it is used in many *_types files
+  object(:input_error) do
+    field(:key, non_null(:string))
+    field(:message, non_null(:string))
+  end
+
   enum :sort_order do
     value(:asc)
     value(:desc)

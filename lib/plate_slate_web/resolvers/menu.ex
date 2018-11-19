@@ -30,7 +30,7 @@ defmodule PlateSlateWeb.Resolvers.Menu do
     case Menu.create_item(params) do
       {:error, changeset} ->
         # Adding more information to the errors in the changeset
-        {:ok, %{errors: Utils.translate_chageset_errors(changeset)}}
+        {:ok, %{errors: Utils.translate_changeset_errors(changeset)}}
 
       {:ok, menu_item} ->
         {:ok, %{menu_item: menu_item}}
@@ -43,7 +43,7 @@ defmodule PlateSlateWeb.Resolvers.Menu do
         case Menu.update_item(item, params) do
           {:error, changeset} ->
             # Adding more information to the errors in the changeset
-            {:ok, %{errors: Utils.translate_chageset_errors(changeset)}}
+            {:ok, %{errors: Utils.translate_changeset_errors(changeset)}}
 
           {:ok, menu_item} ->
             {:ok, %{menu_item: menu_item}}
