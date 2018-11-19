@@ -28,11 +28,6 @@ defmodule PlateSlateWeb.Schema.MenuTypes do
     field(:errors, list_of(:input_error))
   end
 
-  object(:input_error) do
-    field(:key, non_null(:string))
-    field(:message, non_null(:string))
-  end
-
   # --------------Menu Queries definitions-----------
   object :menu_queries do
     field :menu_items, list_of(:menu_item) do

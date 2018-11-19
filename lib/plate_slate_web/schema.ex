@@ -11,6 +11,7 @@ defmodule PlateSlateWeb.Schema do
 
   # Import types defined in PlateSlateWeb.Schema.MenuTypes
   import_types(__MODULE__.MenuTypes)
+  import_types(__MODULE__.OrderingTypes)
   import_types(__MODULE__.UtilsTypes)
 
   query do
@@ -20,5 +21,10 @@ defmodule PlateSlateWeb.Schema do
 
   mutation do
     import_fields(:menu_mutations)
+    import_fields(:ordering_mutations)
+  end
+
+  subscription do
+    import_fields(:ordering_subscriptions)
   end
 end
