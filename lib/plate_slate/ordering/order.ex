@@ -18,7 +18,7 @@ defmodule PlateSlate.Ordering.Order do
   @doc false
   def changeset(%Order{} = order, attrs) do
     order
-    |> cast(attrs, [:customer_number, :items, :ordered_at, :state])
+    |> cast(attrs, [:customer_number, :ordered_at, :state])
     |> cast_embed(:items)
   end
 end
