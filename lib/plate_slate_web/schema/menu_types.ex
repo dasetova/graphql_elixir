@@ -1,7 +1,6 @@
 defmodule PlateSlateWeb.Schema.MenuTypes do
   use Absinthe.Schema.Notation
   alias PlateSlateWeb.Resolvers
-  alias PlateSlateWeb.Schema.Middleware
 
   # ------Bussiness Types---------
   object :menu_item do
@@ -62,10 +61,6 @@ defmodule PlateSlateWeb.Schema.MenuTypes do
       # Could be any name
       arg(:input, non_null(:menu_item_input))
       resolve(&Resolvers.Menu.create_item/3)
-
-      # Middleware function is used to specific middleware modules created for us to improve how the resolution is made
-      # The ChangesetErrors middleware is after resolve because this is like a pipeline. Wherever the resolve returns is the input to the next
-      middleware(Middleware.ChangesetErrors)
     end
 
     field(:update_menu_item, :menu_item_result) do

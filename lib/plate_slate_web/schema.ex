@@ -8,11 +8,23 @@
 # ---
 defmodule PlateSlateWeb.Schema do
   use Absinthe.Schema
+  alias PlateSlateWeb.Schema.Middleware
 
   # Import types defined in PlateSlateWeb.Schema.MenuTypes
   import_types(__MODULE__.MenuTypes)
   import_types(__MODULE__.OrderingTypes)
   import_types(__MODULE__.UtilsTypes)
+
+  # Defines the middleware to execute when the queries are mutations.
+  # Adding the ChangesetErrors translator
+  def middleware(middleware, _field, %{identifier: :mutation}) do
+    middleware ++ [Middleware.ChangesetErrors]
+  end
+
+  # When no mutation, then the middleware will be the same
+  def middleware(middleware, _field, _object) do
+    middleware
+  end
 
   query do
     # Imports the object in MenuTypes. There are the queries defined to menu context

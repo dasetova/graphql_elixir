@@ -5,9 +5,6 @@ defmodule PlateSlateWeb.Resolvers.Ordering do
     case Ordering.create_order(place_order_input) do
       {:ok, order} ->
         {:ok, %{order: order}}
-
-        # {:error, changeset} ->
-        #   {:ok, %{errors: Utils.translate_changeset_errors(changeset)}}
     end
   end
 
@@ -16,9 +13,6 @@ defmodule PlateSlateWeb.Resolvers.Ordering do
 
     with({:ok, order} <- Ordering.update_order(order, %{state: "ready"})) do
       {:ok, %{order: order}}
-      # else
-      #   {:error, changeset} ->
-      #     {:ok, %{errors: Utils.translate_changeset_errors(changeset)}}
     end
   end
 
@@ -27,9 +21,6 @@ defmodule PlateSlateWeb.Resolvers.Ordering do
 
     with({:ok, order} <- Ordering.update_order(order, %{state: "complete"})) do
       {:ok, %{order: order}}
-      # else
-      #   {:error, changeset} ->
-      #     {:ok, %{errors: Utils.translate_changeset_errors(changeset)}}
     end
   end
 end
