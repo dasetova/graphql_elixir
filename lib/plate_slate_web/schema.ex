@@ -15,6 +15,18 @@ defmodule PlateSlateWeb.Schema do
   import_types(__MODULE__.OrderingTypes)
   import_types(__MODULE__.UtilsTypes)
 
+  # Defining middleware to a field
+  def middleware(middleware, field, %{identifier: :allergy_info} = object) do
+    # The allergy_info is a list of maps field, when is getted from the database
+    # this comes in a map of strings.
+    # This function change the default resolution to that field changet the
+    # MapGet default (with the atom), converting atom to string
+    new_middleware = {Absinthe.Middleware.MapGet, to_string(field.identifier)}
+
+    middleware
+    |> Absinthe.Schema.replace_default(new_middleware, field, object)
+  end
+
   # Defines the middleware to execute when the queries are mutations.
   # Adding the ChangesetErrors translator
   def middleware(middleware, _field, %{identifier: :mutation}) do
