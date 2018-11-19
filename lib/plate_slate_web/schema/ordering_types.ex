@@ -1,21 +1,25 @@
 defmodule PlateSlateWeb.Schema.OrderingTypes do
   use Absinthe.Schema.Notation
   alias PlateSlateWeb.Resolvers.Ordering
+  alias PlateSlateWeb.Schema.Middleware
 
   object(:ordering_mutations) do
     field(:place_order, :order_result) do
       arg(:input, non_null(:place_order_input))
       resolve(&Ordering.place_order/3)
+      middleware(Middleware.ChangesetErrors)
     end
 
     field(:ready_order, :order_result) do
       arg(:id, non_null(:id))
       resolve(&Ordering.ready_order/3)
+      middleware(Middleware.ChangesetErrors)
     end
 
     field(:complete_order, :order_result) do
       arg(:id, non_null(:id))
       resolve(&Ordering.complete_order/3)
+      middleware(Middleware.ChangesetErrors)
     end
   end
 

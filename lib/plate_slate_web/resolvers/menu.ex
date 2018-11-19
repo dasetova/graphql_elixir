@@ -27,13 +27,8 @@ defmodule PlateSlateWeb.Resolvers.Menu do
   end
 
   def create_item(_, %{input: params}, _) do
-    case Menu.create_item(params) do
-      {:error, changeset} ->
-        # Adding more information to the errors in the changeset
-        {:ok, %{errors: Utils.translate_changeset_errors(changeset)}}
-
-      {:ok, menu_item} ->
-        {:ok, %{menu_item: menu_item}}
+    with {:ok, item} <- Menu.create_item(params) do
+      {:ok, %{menu_item: item}}
     end
   end
 
