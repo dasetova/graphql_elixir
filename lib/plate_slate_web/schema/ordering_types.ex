@@ -25,6 +25,11 @@ defmodule PlateSlateWeb.Schema.OrderingTypes do
       # Later the topic config will be explained
       # Topic is used in the publish function
       config(fn _args, _info -> {:ok, topic: "*"} end)
+      trigger([:place_order], topic: fn _ -> "*" end)
+
+      resolve(fn %{order: order}, _, _ ->
+        {:ok, order}
+      end)
     end
 
     field(:update_order, :order) do
