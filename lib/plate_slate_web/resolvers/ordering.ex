@@ -1,13 +1,24 @@
 defmodule PlateSlateWeb.Resolvers.Ordering do
-  alias PlateSlate.{Ordering, Helpers.Utils}
+  alias PlateSlate.Ordering
 
-  def place_order(_, %{input: place_order_input}, _) do
-    case Ordering.create_order(place_order_input) do
-      {:ok, order} ->
-        {:ok, %{order: order}}
+  def place_order(_, %{input: place_order_input}, %{context: context}) do
+    place_order_input =
+      case context[:current_user] do
+        %{role: "customer", id: id} ->
+          Map.put(place_order_input, :customer_id, id)
 
-      {:error, changeset} ->
-        {:ok, %{errors: Utils.translate_changeset_errors(changeset)}}
+        _ ->
+          place_order_input
+      end
+
+    with {:ok, order} <- Ordering.create_order(place_order_input) do
+      Absinthe.Subscription.publish(
+        PlateSlateWeb.Endpoint,
+        order,
+        new_order: [order.customer_id, "*"]
+      )
+
+      {:ok, %{order: order}}
     end
   end
 
@@ -16,9 +27,6 @@ defmodule PlateSlateWeb.Resolvers.Ordering do
 
     with({:ok, order} <- Ordering.update_order(order, %{state: "ready"})) do
       {:ok, %{order: order}}
-    else
-      {:error, changeset} ->
-        {:ok, %{errors: Utils.translate_changeset_errors(changeset)}}
     end
   end
 
@@ -27,9 +35,6 @@ defmodule PlateSlateWeb.Resolvers.Ordering do
 
     with({:ok, order} <- Ordering.update_order(order, %{state: "complete"})) do
       {:ok, %{order: order}}
-    else
-      {:error, changeset} ->
-        {:ok, %{errors: Utils.translate_changeset_errors(changeset)}}
     end
   end
 end

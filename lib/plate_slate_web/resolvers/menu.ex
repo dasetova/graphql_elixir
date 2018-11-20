@@ -7,7 +7,7 @@
 # Visit http://www.pragmaticprogrammer.com/titles/wwgraphql for more book information.
 # ---
 defmodule PlateSlateWeb.Resolvers.Menu do
-  alias PlateSlate.{Menu, Helpers.Utils}
+  alias PlateSlate.Menu
 
   def menu_items(_, args, _) do
     {:ok, Menu.list_items(args)}
@@ -27,13 +27,8 @@ defmodule PlateSlateWeb.Resolvers.Menu do
   end
 
   def create_item(_, %{input: params}, _) do
-    case Menu.create_item(params) do
-      {:error, changeset} ->
-        # Adding more information to the errors in the changeset
-        {:ok, %{errors: Utils.translate_changeset_errors(changeset)}}
-
-      {:ok, menu_item} ->
-        {:ok, %{menu_item: menu_item}}
+    with {:ok, item} <- Menu.create_item(params) do
+      {:ok, %{menu_item: item}}
     end
   end
 
@@ -41,10 +36,6 @@ defmodule PlateSlateWeb.Resolvers.Menu do
     case Menu.get_item(id) do
       %Menu.Item{} = item ->
         case Menu.update_item(item, params) do
-          {:error, changeset} ->
-            # Adding more information to the errors in the changeset
-            {:ok, %{errors: Utils.translate_changeset_errors(changeset)}}
-
           {:ok, menu_item} ->
             {:ok, %{menu_item: menu_item}}
         end
