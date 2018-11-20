@@ -9,6 +9,7 @@
 defmodule PlateSlateWeb.Schema do
   use Absinthe.Schema
   alias PlateSlateWeb.Schema.Middleware
+  alias PlateSlateWeb.Resolvers
 
   # Import types defined in PlateSlateWeb.Schema.MenuTypes
   import_types(__MODULE__.MenuTypes)
@@ -42,6 +43,11 @@ defmodule PlateSlateWeb.Schema do
   query do
     # Imports the object in MenuTypes. There are the queries defined to menu context
     import_fields(:menu_queries)
+
+    field(:me, :user) do
+      middleware(Middleware.Authorize, :any)
+      resolve(&Resolvers.Accounts.me/3)
+    end
   end
 
   mutation do
