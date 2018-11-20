@@ -1,6 +1,7 @@
 defmodule PlateSlateWeb.Schema.MenuTypes do
   use Absinthe.Schema.Notation
   alias PlateSlateWeb.Resolvers
+  alias PlateSlateWeb.Schema.Middleware
 
   # ------Bussiness Types---------
   object :menu_item do
@@ -63,9 +64,8 @@ defmodule PlateSlateWeb.Schema.MenuTypes do
   # --------------Menu Mutations definitions-------------
   object(:menu_mutations) do
     field(:create_menu_item, :menu_item_result) do
-      # The input name is because is the same name use in Relay (Framework)
-      # Could be any name
       arg(:input, non_null(:menu_item_input))
+      middleware(Middleware.Authorize, "employee")
       resolve(&Resolvers.Menu.create_item/3)
     end
 

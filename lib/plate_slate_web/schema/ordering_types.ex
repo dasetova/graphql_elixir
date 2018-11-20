@@ -1,10 +1,12 @@
 defmodule PlateSlateWeb.Schema.OrderingTypes do
   use Absinthe.Schema.Notation
   alias PlateSlateWeb.Resolvers.Ordering
+  alias PlateSlateWeb.Schema.Middleware
 
   object(:ordering_mutations) do
     field(:place_order, :order_result) do
       arg(:input, non_null(:place_order_input))
+      middleware(Middleware.Authorize, :any)
       resolve(&Ordering.place_order/3)
     end
 
@@ -20,15 +22,18 @@ defmodule PlateSlateWeb.Schema.OrderingTypes do
   end
 
   object(:ordering_subscriptions) do
-    field(:new_order, :order) do
-      # The config macro is specific to susbscriptions
-      # Later the topic config will be explained
-      # Topic is used in the publish function
-      config(fn _args, _info -> {:ok, topic: "*"} end)
-      trigger([:place_order], topic: fn _ -> "*" end)
+    field :new_order, :order do
+      config(fn _args, %{context: context} ->
+        case context[:current_user] do
+          %{role: "customer", id: id} ->
+            {:ok, topic: id}
 
-      resolve(fn %{order: order}, _, _ ->
-        {:ok, order}
+          %{role: "employee"} ->
+            {:ok, topic: "*"}
+
+          _ ->
+            {:error, "unauthorized"}
+        end
       end)
     end
 
